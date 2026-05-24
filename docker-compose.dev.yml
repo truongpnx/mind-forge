@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - go-cache:/root/.cache/go-build
+      - go-pkg:/go/pkg/mod
+    environment:
+      - GOPATH=/go
+    restart: unless-stopped
+
+volumes:
+  go-cache:
+  go-pkg:

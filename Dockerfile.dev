@@ -1,0 +1,21 @@
+FROM golang:1.25-bookworm
+
+WORKDIR /app
+
+# Install templ
+RUN go install github.com/a-h/templ/cmd/templ@v0.3.1020
+
+# Install air
+RUN go install github.com/air-verse/air@v1.65.3
+
+# Install tailwindcss standalone binary (v4)
+RUN curl -sL https://github.com/tailwindlabs/tailwindcss/releases/download/v4.3.0/tailwindcss-linux-x64 \
+    -o /usr/local/bin/tailwindcss \
+    && chmod +x /usr/local/bin/tailwindcss
+
+# Pre-download Go dependencies (cache layer)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Sleep indefinitely to keep the container running
+CMD ["tail", "-f", "/dev/null"]
