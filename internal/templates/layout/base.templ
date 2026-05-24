@@ -1,0 +1,39 @@
+package layout
+
+templ Base(title string) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>{ title } — Mind Forge</title>
+			<link rel="stylesheet" href="/static/css/output.css"/>
+		</head>
+		<body class="min-h-screen bg-gray-950 text-gray-100 font-sans">
+			@navbar()
+			<main class="container mx-auto px-4 py-8">
+				{ children... }
+			</main>
+			@footer()
+		</body>
+	</html>
+}
+
+templ navbar() {
+	<nav class="border-b border-gray-800 bg-gray-900">
+		<div class="container mx-auto flex items-center justify-between px-4 py-3">
+			<a href="/" class="text-xl font-bold tracking-tight text-indigo-400 hover:text-indigo-300">
+				Mind Forge
+			</a>
+			<div class="flex gap-4 text-sm text-gray-400">
+				<a href="/" class="hover:text-gray-100 transition-colors">Games</a>
+			</div>
+		</div>
+	</nav>
+}
+
+templ footer() {
+	<footer class="mt-16 border-t border-gray-800 py-6 text-center text-sm text-gray-600">
+		<p>Mind Forge — sharpen your mind.</p>
+	</footer>
+}

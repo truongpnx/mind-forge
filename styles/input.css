@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colours */
+  --color-brand-50: oklch(0.97 0.02 260);
+  --color-brand-400: oklch(0.70 0.18 260);
+  --color-brand-500: oklch(0.62 0.22 260);
+  --color-brand-600: oklch(0.54 0.24 260);
+
+  /* Neutral surface scale (dark-first) */
+  --color-surface-base: oklch(0.10 0.00 0);
+  --color-surface-raised: oklch(0.13 0.00 0);
+  --color-surface-overlay: oklch(0.16 0.00 0);
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Rounded */
+  --radius-card: 0.75rem;
+}
+
+/* ─── Base overrides ─────────────────────────────────── */
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-surface-base);
+    color: oklch(0.93 0.01 260);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

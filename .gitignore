@@ -1,0 +1,16 @@
+# Binary
+mind-forge
+tmp/
+
+# Generated
+static/css/output.css
+internal/templates/**/*_templ.go
+
+# Go
+vendor/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store

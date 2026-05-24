@@ -1,0 +1,22 @@
+package game
+
+import (
+	"github.com/truongpnx/mind-forge/internal/models"
+	"github.com/truongpnx/mind-forge/internal/templates/components"
+	"github.com/truongpnx/mind-forge/internal/templates/layout"
+)
+
+templ HowTo(g models.Game) {
+	@layout.Base(g.Name + " — How to Play") {
+		@components.BackLink("/"+string(g.Slug), g.Name)
+		@components.PageHeading("How to Play "+g.Name, "")
+		<div class="prose prose-invert max-w-2xl">
+			<p class="text-gray-400">
+				Rules and instructions for <strong class="text-gray-200">{ g.Name }</strong> will appear here.
+			</p>
+			<div class="mt-8 rounded-lg border border-dashed border-gray-700 p-8 text-center text-gray-600">
+				// TODO: add game-specific how-to content
+			</div>
+		</div>
+	}
+}

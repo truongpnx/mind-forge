@@ -1,0 +1,44 @@
+package game
+
+import (
+	"github.com/truongpnx/mind-forge/internal/models"
+	"github.com/truongpnx/mind-forge/internal/templates/components"
+	"github.com/truongpnx/mind-forge/internal/templates/layout"
+)
+
+templ Match(g models.Game) {
+	@layout.Base(g.Name + " — Match") {
+		@components.BackLink("/"+string(g.Slug), g.Name)
+		@components.PageHeading(g.Name, "Play against a human opponent")
+		<div class="grid gap-6 md:grid-cols-2">
+			<!-- Create room -->
+			<div class="rounded-xl border border-gray-800 bg-gray-900 p-6">
+				<h2 class="mb-1 text-base font-semibold text-gray-200">Create a Room</h2>
+				<p class="mb-4 text-sm text-gray-500">Share the room code with your opponent.</p>
+				<button class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition">
+					Create Room
+				</button>
+			</div>
+			<!-- Join room -->
+			<div class="rounded-xl border border-gray-800 bg-gray-900 p-6">
+				<h2 class="mb-1 text-base font-semibold text-gray-200">Join a Room</h2>
+				<p class="mb-4 text-sm text-gray-500">Enter a room code to join an existing game.</p>
+				<div class="flex gap-2">
+					<input
+						type="text"
+						placeholder="Room code"
+						maxlength="8"
+						class="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-100 placeholder-gray-600 focus:border-indigo-500 focus:outline-none"
+					/>
+					<button class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-500 transition">
+						Join
+					</button>
+				</div>
+			</div>
+		</div>
+		<!-- Match board placeholder -->
+		<div class="mt-8 flex items-center justify-center rounded-xl border border-dashed border-gray-700 p-16 text-gray-600">
+			Match board will render here once a room is active
+		</div>
+	}
+}

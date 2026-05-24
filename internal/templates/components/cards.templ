@@ -1,0 +1,37 @@
+package components
+
+import "github.com/truongpnx/mind-forge/internal/models"
+
+// GameCard renders a single game tile for the home listing.
+templ GameCard(game models.Game) {
+	<a
+		href={ templ.SafeURL("/" + string(game.Slug)) }
+		class="group flex flex-col rounded-xl border border-gray-800 bg-gray-900 p-6 transition hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-900/20"
+	>
+		<img
+			src={ game.Icon }
+			alt={ game.Name }
+			class="mb-4 h-16 w-16 object-contain opacity-80 group-hover:opacity-100 transition"
+		/>
+		<h2 class="text-lg font-semibold text-gray-100 group-hover:text-indigo-300 transition">{ game.Name }</h2>
+		<p class="mt-2 text-sm text-gray-500 leading-relaxed">{ game.Description }</p>
+		<span class="mt-4 text-xs font-medium text-indigo-500 group-hover:text-indigo-400 transition">Play now →</span>
+	</a>
+}
+
+// PageHeading renders a consistent page title with an optional sub-heading.
+templ PageHeading(title, subtitle string) {
+	<div class="mb-8">
+		<h1 class="text-3xl font-bold text-gray-100">{ title }</h1>
+		if subtitle != "" {
+			<p class="mt-2 text-gray-500">{ subtitle }</p>
+		}
+	</div>
+}
+
+// BackLink renders a "← Back" navigation link.
+templ BackLink(href, label string) {
+	<a href={ templ.SafeURL(href) } class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-300 transition mb-6">
+		← { label }
+	</a>
+}
