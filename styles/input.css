@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Brand colours */
   --color-brand-50: oklch(0.97 0.02 260);
@@ -22,12 +24,20 @@
 /* ─── Base overrides ─────────────────────────────────── */
 @layer base {
   html {
+    color-scheme: light;
+    --color-page-bg: oklch(0.98 0.01 260);
+    --color-page-text: oklch(0.22 0.02 260);
+  }
+
+  html.dark {
     color-scheme: dark;
+    --color-page-bg: var(--color-surface-base);
+    --color-page-text: oklch(0.93 0.01 260);
   }
 
   body {
-    background-color: var(--color-surface-base);
-    color: oklch(0.93 0.01 260);
+    background-color: var(--color-page-bg);
+    color: var(--color-page-text);
     -webkit-font-smoothing: antialiased;
   }
 

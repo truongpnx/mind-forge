@@ -1,39 +1,91 @@
 package layout
 
+import "github.com/truongpnx/mind-forge/internal/templates/components"
+
 templ Base(title string) {
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang="en" class="light">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<script>
+				(() => {
+					const storedTheme = localStorage.getItem("theme");
+					const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+					const theme = storedTheme || (prefersDark ? "dark" : "light");
+
+					document.documentElement.classList.toggle("dark", theme === "dark");
+					document.documentElement.classList.toggle("light", theme !== "dark");
+				})();
+			</script>
 			<title>{ title } — Mind Forge</title>
 			<link rel="stylesheet" href="/static/css/output.css"/>
 		</head>
-		<body class="min-h-screen bg-gray-950 text-gray-100 font-sans">
+		<body class="min-h-screen bg-[var(--color-page-bg)] text-[var(--color-page-text)] font-sans transition-colors">
 			@navbar()
 			<main class="container mx-auto px-4 py-8">
 				{ children... }
 			</main>
 			@footer()
+			@themeToggle()
+			<script>
+				(() => {
+					const button = document.querySelector("[data-theme-toggle]");
+					const lightIcon = document.querySelector("[data-theme-light-icon]");
+					const darkIcon = document.querySelector("[data-theme-dark-icon]");
+
+					const setTheme = (theme) => {
+						const isDark = theme === "dark";
+						document.documentElement.classList.toggle("dark", isDark);
+						document.documentElement.classList.toggle("light", !isDark);
+						localStorage.setItem("theme", theme);
+						button?.setAttribute("aria-label", `Switch to ${isDark ? "light" : "dark"} mode`);
+						lightIcon?.classList.toggle("hidden", !isDark);
+						darkIcon?.classList.toggle("hidden", isDark);
+					};
+
+					const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+					setTheme(currentTheme);
+					button?.addEventListener("click", () => {
+						setTheme(document.documentElement.classList.contains("dark") ? "light" : "dark");
+					});
+				})();
+			</script>
 		</body>
 	</html>
 }
 
 templ navbar() {
-	<nav class="border-b border-gray-800 bg-gray-900">
+	<nav class="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
 		<div class="container mx-auto flex items-center justify-between px-4 py-3">
-			<a href="/" class="text-xl font-bold tracking-tight text-indigo-400 hover:text-indigo-300">
+			<a href="/" class="text-xl font-bold tracking-tight text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
 				Mind Forge
 			</a>
-			<div class="flex gap-4 text-sm text-gray-400">
-				<a href="/" class="hover:text-gray-100 transition-colors">Games</a>
+			<div class="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+				<a href="/" class="hover:text-gray-950 transition-colors dark:hover:text-gray-100">Games</a>
 			</div>
 		</div>
 	</nav>
 }
 
 templ footer() {
-	<footer class="mt-16 border-t border-gray-800 py-6 text-center text-sm text-gray-600">
+	<footer class="mt-16 border-t border-gray-200 py-6 text-center text-sm text-gray-500 dark:border-gray-800 dark:text-gray-600">
 		<p>Mind Forge — sharpen your mind.</p>
 	</footer>
+}
+
+templ themeToggle() {
+	<button
+		type="button"
+		data-theme-toggle
+		aria-label="Switch theme"
+		class="fixed bottom-4 right-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-300 bg-white text-gray-800 shadow-lg shadow-gray-900/10 transition hover:border-indigo-400 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:shadow-black/30 dark:hover:border-indigo-500 dark:hover:text-indigo-300 dark:focus:ring-offset-gray-950"
+	>
+		<span data-theme-dark-icon>
+			@components.IconMoon("h-5 w-5")
+		</span>
+		<span data-theme-light-icon class="hidden">
+			@components.IconSun("h-5 w-5")
+		</span>
+	</button>
 }

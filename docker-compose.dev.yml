@@ -3,8 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    ports:
-      - "8080:8080"
+    # use port fowarding to access the app from the host machine instead of inside the container
+    # ports:
+    #   - "8080:8080"
     volumes:
       - .:/app
       - go-cache:/root/.cache/go-build
