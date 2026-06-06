@@ -1,8 +1,11 @@
 package layout
 
-import "github.com/truongpnx/mind-forge/internal/templates/components"
+import (
+	"github.com/truongpnx/mind-forge/internal/models"
+	"github.com/truongpnx/mind-forge/internal/templates/components"
+)
 
-templ Base(title string) {
+templ Base(title string, user *models.User) {
 	<!DOCTYPE html>
 	<html lang="en" class="light">
 		<head>
@@ -22,7 +25,7 @@ templ Base(title string) {
 			<link rel="stylesheet" href="/static/css/output.css"/>
 		</head>
 		<body class="min-h-screen bg-[var(--color-page-bg)] text-[var(--color-page-text)] font-sans transition-colors">
-			@navbar()
+			@navbar(user)
 			<main class="container mx-auto px-4 py-8">
 				{ children... }
 			</main>
@@ -55,14 +58,31 @@ templ Base(title string) {
 	</html>
 }
 
-templ navbar() {
+templ navbar(user *models.User) {
 	<nav class="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
 		<div class="container mx-auto flex items-center justify-between px-4 py-3">
 			<a href="/" class="text-xl font-bold tracking-tight text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
 				Mind Forge
 			</a>
-			<div class="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-				<a href="/" class="hover:text-gray-950 transition-colors dark:hover:text-gray-100">Games</a>
+			<div class="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+				<a href="/" class="transition-colors hover:text-gray-950 dark:hover:text-gray-100">Games</a>
+				if user != nil {
+					<a
+						href="/auth/profile"
+						class="flex items-center gap-2 rounded-lg px-3 py-2 font-medium transition-colors hover:bg-gray-100 hover:text-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+					>
+						<span class="inline-flex shrink-0 h-6 w-6 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white">
+							{ string([]rune(user.Username)[:1]) }
+						</span>
+						{ user.Username }
+					</a>
+				} else {
+					<a href="/auth/login" class="transition-colors hover:text-gray-950 dark:hover:text-gray-100">Login</a>
+					<a
+						href="/auth/register"
+						class="rounded-lg bg-indigo-600 px-3 py-2 font-medium text-white transition hover:bg-indigo-500"
+					>Register</a>
+				}
 			</div>
 		</div>
 	</nav>

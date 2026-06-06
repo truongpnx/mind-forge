@@ -6,8 +6,8 @@ import (
 	"github.com/truongpnx/mind-forge/internal/templates/layout"
 )
 
-templ Index(games []models.Game) {
-	@layout.Base("Games") {
+templ Index(games []models.Game, user *models.User) {
+	@layout.Base("Games", user) {
 		@components.PageHeading("Games", "Choose a game and sharpen your mind.")
 		<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 			for _, g := range games {

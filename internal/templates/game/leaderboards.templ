@@ -16,8 +16,8 @@ type LeaderboardEntry struct {
 	Losses int
 }
 
-templ Leaderboards(g models.Game, entries []LeaderboardEntry) {
-	@layout.Base(g.Name + " — Leaderboards") {
+templ Leaderboards(g models.Game, entries []LeaderboardEntry, user *models.User) {
+	@layout.Base(g.Name+" — Leaderboards", user) {
 		@components.BackLink("/"+string(g.Slug), g.Name)
 		@components.PageHeading(g.Name+" Leaderboards", "Top players ranked by score")
 		if len(entries) == 0 {

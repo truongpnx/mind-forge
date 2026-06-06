@@ -1,0 +1,163 @@
+package auth
+
+import (
+	"github.com/truongpnx/mind-forge/internal/models"
+	"github.com/truongpnx/mind-forge/internal/templates/layout"
+)
+
+templ Profile(user *models.User) {
+	@layout.Base("Profile", user) {
+		<div class="mx-auto max-w-lg">
+			<h1 class="mb-8 text-3xl font-bold text-gray-950 dark:text-gray-100">Profile</h1>
+			<!-- Account info -->
+			<section class="mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+				<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Account</h2>
+				<dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
+					<dt class="font-medium text-gray-500 dark:text-gray-400">Username</dt>
+					<dd class="text-gray-900 dark:text-gray-100" id="display-username">{ user.Username }</dd>
+					<dt class="font-medium text-gray-500 dark:text-gray-400">Email</dt>
+					<dd class="text-gray-900 dark:text-gray-100">{ user.Email }</dd>
+					<dt class="font-medium text-gray-500 dark:text-gray-400">Member since</dt>
+					<dd class="text-gray-900 dark:text-gray-100">{ user.CreatedAt.Format("2 Jan 2006") }</dd>
+				</dl>
+			</section>
+			<!-- Change username -->
+			<section class="mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+				<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Change Username</h2>
+				<div id="username-err" class="mb-3 hidden rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400"></div>
+				<div id="username-ok" class="mb-3 hidden rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400">Username updated.</div>
+				<form id="username-form" class="flex gap-2">
+					<input
+						type="text"
+						name="username"
+						required
+						value={ user.Username }
+						class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+					/>
+					<button
+						type="submit"
+						class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-60"
+					>Save</button>
+				</form>
+			</section>
+			<!-- Change password -->
+			<section class="mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+				<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">Change Password</h2>
+				<div id="password-err" class="mb-3 hidden rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-400"></div>
+				<div id="password-ok" class="mb-3 hidden rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400">Password updated.</div>
+				<form id="password-form" class="flex flex-col gap-4">
+					<div>
+						<label for="current-password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Current password</label>
+						<input
+							type="password"
+							id="current-password"
+							name="current_password"
+							required
+							autocomplete="current-password"
+							class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+						/>
+					</div>
+					<div>
+						<label for="new-password" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">New password</label>
+						<input
+							type="password"
+							id="new-password"
+							name="new_password"
+							required
+							autocomplete="new-password"
+							minlength="8"
+							class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+						/>
+					</div>
+					<button
+						type="submit"
+						class="self-start rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:opacity-60"
+					>Update password</button>
+				</form>
+			</section>
+			<!-- Danger zone -->
+			<section class="rounded-xl border border-red-200 bg-white p-6 dark:border-red-900/50 dark:bg-gray-900">
+				<h2 class="mb-4 text-lg font-semibold text-red-700 dark:text-red-400">Danger zone</h2>
+				<p class="mb-4 text-sm text-gray-600 dark:text-gray-500">Signing out will clear your session on this device.</p>
+				<button
+					id="logout-btn"
+					type="button"
+					class="rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
+				>Sign out</button>
+			</section>
+		</div>
+		<script>
+			// ── username ──────────────────────────────────────────────────────
+			document.getElementById("username-form").addEventListener("submit", async (e) => {
+				e.preventDefault();
+				const form = e.currentTarget;
+				const btn = form.querySelector("button[type=submit]");
+				const err = document.getElementById("username-err");
+				const ok = document.getElementById("username-ok");
+				btn.disabled = true;
+				err.classList.add("hidden");
+				ok.classList.add("hidden");
+
+				const res = await fetch("/auth/profile/username", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username: form.username.value.trim() }),
+				});
+
+				if (res.ok) {
+					ok.classList.remove("hidden");
+					document.getElementById("display-username").textContent = form.username.value.trim();
+				} else {
+					const text = await res.text();
+					err.textContent = text.trim() || "Failed to update username.";
+					err.classList.remove("hidden");
+				}
+				btn.disabled = false;
+			});
+
+			// ── password ──────────────────────────────────────────────────────
+			document.getElementById("password-form").addEventListener("submit", async (e) => {
+				e.preventDefault();
+				const form = e.currentTarget;
+				const btn = form.querySelector("button[type=submit]");
+				const err = document.getElementById("password-err");
+				const ok = document.getElementById("password-ok");
+				btn.disabled = true;
+				err.classList.add("hidden");
+				ok.classList.add("hidden");
+
+				if (form.new_password.value.length < 8) {
+					err.textContent = "New password must be at least 8 characters.";
+					err.classList.remove("hidden");
+					btn.disabled = false;
+					return;
+				}
+
+				const res = await fetch("/auth/profile/password", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						current_password: form.current_password.value,
+						new_password: form.new_password.value,
+					}),
+				});
+
+				if (res.ok) {
+					ok.classList.remove("hidden");
+					form.reset();
+				} else {
+					const text = await res.text();
+					err.textContent = text.trim() || "Failed to update password.";
+					err.classList.remove("hidden");
+				}
+				btn.disabled = false;
+			});
+
+			// ── logout ────────────────────────────────────────────────────────
+			document.getElementById("logout-btn").addEventListener("click", async () => {
+				await fetch("/auth/logout", { method: "POST" });
+				location.href = "/";
+			});
+		</script>
+	}
+}

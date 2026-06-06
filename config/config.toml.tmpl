@@ -1,0 +1,20 @@
+# Mind Forge — Application Config Template
+# This file is a shell-variable template. At container startup,
+# entrypoint.server.sh runs envsubst to produce config/config.toml.
+
+[postgresql]
+# connection_string takes priority over individual fields when non-empty.
+connection_string = "${POSTGRES_CONNECTION_STRING}"
+postgres_host    = "${POSTGRES_HOST}"
+username          = "${POSTGRES_USER}"
+password          = "${POSTGRES_PASSWORD}"
+port              = ${POSTGRES_PORT}
+database          = "${POSTGRES_DB}"
+
+[redis]
+# socket takes priority over host/port when non-empty (Unix domain socket path).
+socket   = "${REDIS_SOCKET}"
+host     = "${REDIS_HOST}"
+port     = ${REDIS_PORT}
+username = "${REDIS_USERNAME}"
+password = "${REDIS_PASSWORD}"

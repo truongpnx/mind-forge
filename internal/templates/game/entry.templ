@@ -6,8 +6,8 @@ import (
 	"github.com/truongpnx/mind-forge/internal/templates/layout"
 )
 
-templ Entry(g models.Game) {
-	@layout.Base(g.Name) {
+templ Entry(g models.Game, user *models.User) {
+	@layout.Base(g.Name, user) {
 		@components.BackLink("/", "All Games")
 		<div class="flex flex-col items-center gap-8 py-8">
 			<img src={ g.Icon } alt={ g.Name } class="h-24 w-24 object-contain opacity-90"/>

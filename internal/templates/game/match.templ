@@ -6,8 +6,8 @@ import (
 	"github.com/truongpnx/mind-forge/internal/templates/layout"
 )
 
-templ Match(g models.Game) {
-	@layout.Base(g.Name + " — Match") {
+templ Match(g models.Game, user *models.User) {
+	@layout.Base(g.Name+" — Match", user) {
 		@components.BackLink("/"+string(g.Slug), g.Name)
 		@components.PageHeading(g.Name, "Play against a human opponent")
 		<div class="grid gap-6 md:grid-cols-2">

@@ -6,8 +6,8 @@ import (
 	"github.com/truongpnx/mind-forge/internal/templates/layout"
 )
 
-templ HowTo(g models.Game) {
-	@layout.Base(g.Name + " — How to Play") {
+templ HowTo(g models.Game, user *models.User) {
+	@layout.Base(g.Name+" — How to Play", user) {
 		@components.BackLink("/"+string(g.Slug), g.Name)
 		@components.PageHeading("How to Play "+g.Name, "")
 		<div class="prose max-w-2xl dark:prose-invert">

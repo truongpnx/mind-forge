@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/entrypoint.postgre.sh:/docker-entrypoint-initdb.d/init.sh
+    networks:
+      - mind-forge-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB:-db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    env_file:
+      - .env
+    entrypoint: ["/entrypoint.redis.sh"]
+    ports:
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
+    volumes:
+      - redis-data:/data
+      - ./scripts/entrypoint.redis.sh:/entrypoint.redis.sh
+    networks:
+      - mind-forge-net
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -p ${REDIS_PORT:-6379} ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  mind-forge-net:
+    name: mind-forge-net

@@ -26,8 +26,9 @@ func GameEntryHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	user := UserFromContext(r.Context())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := game.Entry(g).Render(r.Context(), w); err != nil {
+	if err := game.Entry(g, user).Render(r.Context(), w); err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
@@ -38,8 +39,9 @@ func GameHowToHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	user := UserFromContext(r.Context())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := game.HowTo(g).Render(r.Context(), w); err != nil {
+	if err := game.HowTo(g, user).Render(r.Context(), w); err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
@@ -50,8 +52,9 @@ func GameMachineHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	user := UserFromContext(r.Context())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := game.Machine(g).Render(r.Context(), w); err != nil {
+	if err := game.Machine(g, user).Render(r.Context(), w); err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
@@ -62,8 +65,9 @@ func GameMatchHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	user := UserFromContext(r.Context())
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := game.Match(g).Render(r.Context(), w); err != nil {
+	if err := game.Match(g, user).Render(r.Context(), w); err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
@@ -74,10 +78,11 @@ func GameLeaderboardsHandler(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
+	user := UserFromContext(r.Context())
 	// TODO: fetch real entries from a data store.
 	entries := []game.LeaderboardEntry{}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := game.Leaderboards(g, entries).Render(r.Context(), w); err != nil {
+	if err := game.Leaderboards(g, entries, user).Render(r.Context(), w); err != nil {
 		http.Error(w, "internal error", http.StatusInternalServerError)
 	}
 }
